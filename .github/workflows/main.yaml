@@ -3,9 +3,11 @@ name: Django CI
   push:
     branches:
       - main
+      - feature/test-branch-101
   pull_request:
     branches:
       - main
+      - feature/test-branch-101
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,19 +22,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Debug
-        run: |
-          ls -l
-          pwd
-          ls -l mymicroservice
+
   test: 
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: Run tests
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
       run: |
-        cd mymicroservice
-        python manage.py test api.tests
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Change to microservice directory
+      run: cd mymicroservice
+    - name: Run tests
+      run: python manage.py test api.tests
           
   lint:
     runs-on: ubuntu-latest
@@ -42,6 +50,7 @@ jobs:
         run: |
           # Replace this with your linting command
           pylint mymicroservice
+
   sonarqube:
     runs-on: ubuntu-latest
     needs:
