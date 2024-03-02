@@ -42,6 +42,7 @@ jobs:
         run: python manage.py test api.tests
   lint:
     runs-on: ubuntu-latest
+    if: success() || failure()
     needs: test
     steps:
       - name: Lint code
@@ -50,6 +51,7 @@ jobs:
           pylint mymicroservice
   sonarqube:
     runs-on: ubuntu-latest
+    if: success() || failure()
     needs:
       - build
       - test
