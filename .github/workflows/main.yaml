@@ -40,7 +40,7 @@ jobs:
         run: cd mymicroservice
       - name: Run tests
         run: python manage.py test api.tests
-  lint: null
+  lint:
     runs-on: ubuntu-latest
     if: success() || failure()
     needs: test
